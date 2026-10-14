@@ -1,0 +1,15 @@
+{
+    "USA_1_TOP3000": [
+        "industry",
+        "market",
+        "bucket(rank(cap), range='0.1, 1, 0.1')"
+    ],
+    "USA_0_TOP3000": [
+        "industry",
+        "market"
+    ],
+    "EUR_1_TOP2500": [
+        "industry",
+        "market"
+    ]
+}

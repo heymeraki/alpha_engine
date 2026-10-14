@@ -1,0 +1,10 @@
+pandas
+numpy
+requests
+pyyaml
+aiohttp
+asyncio
+aiofiles
+tqdm
+loguru
+mcp[cli]<2
