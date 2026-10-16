@@ -70,8 +70,8 @@ def run_task(dataset_id, region, delay, instrumentType, universe, maxTrade, neut
                 step_num = parts[5]
 
             if int(delay) == 1:
-                sharpe_step2_th = 1
-                fitness_step2_th = 0.5
+                sharpe_step2_th = 0.75
+                fitness_step2_th = 0.35
             elif int(delay) == 0:
                 sharpe_step2_th = 2
                 fitness_step2_th = 1

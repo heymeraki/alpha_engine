@@ -1,13 +1,13 @@
 # Alpha 因子自动挖掘工具（CLI）
 
-面向 WorldQuant BRAIN 平台的 Alpha 因子命令行工具：自动生成表达式 → 批量回测 → 逐层筛选 → 质量检查 → 提交。
+面向 WorldQuant BRAIN 平台的 Alpha 因子命令行工具：自动生成表达式 → 流水线回测 → 逐层筛选 → 质量检查 → 提交。
 
 ## 项目结构
 
 ```
 cli.py             # CLI 统一入口
 config.py          # 区域 / 延迟 / 股票池等常量
-machine_lib*.py    # 会话登录、批量回测、剪枝、结果查询
+machine_lib*.py    # 会话登录、流水线回测、剪枝、结果查询
 field_provider.py  # 字段来源（datafields / 推荐器 / 已有因子）
 mcp_server/        # MCP Server
 tasks/             # 各命令对应的任务模块
@@ -22,7 +22,7 @@ user_info.txt      # WQ 账号密码（需自行填写）
 
 - 四阶段流水线：一阶算子 → 分组算子 → `trade_when` 条件 → 模板组合
 - 字段自动预处理：`winsorize(ts_backfill(field, 120), std=4)`，自动填充缺失值 + 去极值
-- 批量回测，自动轮询状态、失败重试、限流退避
+- 流水线回测：8 个并发槽位完成一个补一个，自动轮询状态、失败重试、限流退避
 - 同字段剪枝 + 本地去重，支持断点续跑
 - 自相关 / PROD 相关性检查，通过的因子自动标记颜色
 - 内置 MCP Server，可接入 AI 客户端自动完成研究流程
@@ -79,12 +79,12 @@ python cli.py submit --alpha-id <ALPHA_ID>
 
 ## MCP 接入
 
-内置 MCP Server，接入 Claude Desktop / Cursor / Codex 等客户端后，AI 可调用完整研究流程（发现字段与算子、查询因子、有界批量回测、相关性检查、改名打标、提交、查绩效）：
+内置 MCP Server，接入 Claude Desktop / Cursor / Codex 等客户端后，AI 可调用完整研究流程（发现字段与算子、查询因子、有界流水线回测、相关性检查、改名打标、提交、查绩效）：
 
 ```bash
 python -m mcp_server   # stdio 传输，由 MCP 客户端以子进程方式拉起
 ```
 
-AI 的写操作强制走项目内置的批量模拟器：单批 ≤8、自动去重、按 tag 归档；`run_simulations` 为有界调用，单次最多 100 个表达式，跑完即返回。
+AI 的写操作强制走项目内置的流水线模拟器：并发槽位 ≤8（完成一个补一个）、自动去重、按 tag 归档；`run_simulations` 为有界调用，单次最多 100 个表达式，跑完即返回。
 
 

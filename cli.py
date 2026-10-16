@@ -105,7 +105,7 @@ def add_digging_args(parser):
     parser.add_argument('--universe', default='TOP3000', help='股票池，默认 TOP3000')
     parser.add_argument('--max-trade', default='OFF', choices=['ON', 'OFF'], help='是否启用 maxTrade，默认 OFF')
     parser.add_argument('--neutralization', default='SECTOR', help='中性化方式，默认 SECTOR')
-    parser.add_argument('--n-jobs', type=int, default=4, help='每个批次放几个 Alpha（一次只跑一批，账号全局同时回测上限 8，可多开任务），默认 4')
+    parser.add_argument('--n-jobs', type=int, default=8, help='并发回测槽位数（同时在跑的 Alpha 数，账号全局上限 8；每个槽位完成一个立刻补一个，单终端 8 即跑满），默认 8；多开终端时各任务 n-jobs 之和应 <= 8')
     parser.add_argument('--tag', default=None, help='标签（留空自动生成）')
 
 
